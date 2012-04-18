@@ -1,0 +1,39 @@
+KVM VM Priority - stu@lifeofstu.com
+-----------------------------------
+
+KVP is a very simple script that changes the priority of any running KVM VM, based on a simple configuration file. It was created so that I had an easy way to configure which VM's should take priority when there is contention etc. In an ideal world you should add this script to your crontab so that the system can check and adjust VM priorities when required.
+
+
+Requirements
+------------
+
+- A Linux box running KVM
+- Bash v3 or above (as there is a regex built in)
+
+
+Usage
+-----
+
+- Edit the included configuration file and move it into /etc/libvirt
+  Note: You can put it wherever, just change the variable at the top of the script
+- Move the script to your bin folder (typically /usr/local/bin)
+- Run it to make sure it works
+- Optional: Add to the crontab to make your life easier
+
+
+License
+-------
+
+See the accompanying LICENSE file (Simplified BSD License, 2011)
+
+
+Bugs/Development
+----------------
+
+As with all software there are no doubt bugs hidden away. If you find any please let me know. I'm happy for patches to be sent etc, as long as you are happy with the license for the code. 
+
+
+Todo
+----
+
+The only thing on my tasklist to add is support for setting I/O priority as well, so that both CPU and disk can be prioritised in one hit.
