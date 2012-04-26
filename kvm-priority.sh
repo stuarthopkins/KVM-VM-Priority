@@ -35,7 +35,7 @@ for vm_pid in $(pidof kvm    2>/dev/null | \
   # Inform the user of the details
   printf "PID: %5d   -   PRIO: %3d   -   VM NAME: %s\n" $vm_pid $vm_prio $vm_name
   # Check if a priority level has been configured
-  while IFS="|" read vmc_name vmc_prio ; do
+  while IFS="|" read vmc_name vmc_prio vmc_ioclass vmc_ioprio ; do
     # Is the line a comment
     if [[ "$vmc_name" =~ ^# ]]; then
       # Comment
@@ -46,6 +46,10 @@ for vm_pid in $(pidof kvm    2>/dev/null | \
       kvm_error "Found invalid VM name in cfg file"
     [ "$vmc_prio" != "" ] || \
       kvm_error "Found invalid VM priority in cfg file"
+    [ "$vmc_ioclass" != "" ] || \
+      kvm_error "Found invalid VM IO class in cfg file"
+    [ "$vmc_ioprio" != "" ] || \
+      kvm_error "Found invalid VM IO priority in cfg file"
     # Check for a match
     if [ "$vmc_name" = "$vm_name" ]; then
       # Match found, check if the priority is different
@@ -55,6 +59,8 @@ for vm_pid in $(pidof kvm    2>/dev/null | \
       else
         echo "  - Priority is correct, no adjustment needed"
       fi
+      # Change the IO settings
+      ionice -c $vmc_ioclass -n $vmc_ioprio -p $vm_pid >/dev/null 2>&1
     fi
   done <"$CFG_FILE"
   echo
